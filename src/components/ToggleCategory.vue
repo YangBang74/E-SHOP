@@ -3,32 +3,44 @@ import { ref } from 'vue'
 
 const isActiveCategory = ref(false)
 const isActiveColors = ref(false)
+const isActivePrice = ref(false)
 
 const toggleCategory = () => {
   isActiveCategory.value = !isActiveCategory.value
 }
 const toggleColors = () => {
-  isActiveCategory.value = !isActiveCategory.value
+  isActiveColors.value = !isActiveColors.value
+}
+
+const togglePrice = () => {
+  isActivePrice.value = !isActivePrice.value
 }
 
 const categoryTops = ref([
-  { id: 1, title: 'T-Shirt', checked: 'false' },
-  { id: 2, title: 'Shirt', checked: 'false' },
-  { id: 3, title: 'Jackets', checked: 'false' },
-  { id: 4, title: 'Hoodies', checked: 'false' },
-  { id: 5, title: 'Jeans', checked: 'false' },
+  { id: 1, title: 'T-Shirt', checked: false },
+  { id: 2, title: 'Shirt', checked: false },
+  { id: 3, title: 'Jackets', checked: false },
+  { id: 4, title: 'Hoodies', checked: false },
+  { id: 5, title: 'Jeans', checked: false },
 ])
 
 const categoryColors = ref([
-  { id: 1, color: 'Black', checked: 'false' },
-  { id: 2, color: 'White', checked: 'false' },
-  { id: 3, color: 'Siver', checked: 'false' },
-  { id: 4, color: 'Red', checked: 'false' },
-  { id: 5, color: 'Pink', checked: 'false' },
-  { id: 5, color: 'Yellow', checked: 'false' },
+  { id: 1, color: '#000', title: 'Black', checked: false },
+  { id: 2, color: '#fff', title: 'White', checked: false },
+  { id: 3, color: '#c0c0c0', title: 'Silver', checked: false },
+  { id: 4, color: '#ff0000', title: 'Red', checked: false },
+  { id: 5, color: 'Pink', title: 'Pink', checked: false },
+  { id: 6, color: 'Yellow', title: 'Yellow', checked: false },
 ])
 
-console.log(categoryTops.value.title)
+const categoryPrice = ref([
+  { id: 1, title: '0-100', checked: false },
+  { id: 2, title: '100-200', checked: false },
+  { id: 3, title: '200-500', checked: false },
+  { id: 4, title: '500-1000', checked: false },
+  { id: 5, title: '1000-2000', checked: false },
+  { id: 6, title: '2000+', checked: false },
+])
 </script>
 
 <template>
@@ -62,7 +74,7 @@ console.log(categoryTops.value.title)
           <path d="M1 10L6 5.5L1 1" stroke="black" stroke-linecap="round" stroke-linejoin="round" />
         </svg>
       </div>
-      <ul class="toggle__accardion-list" :class="{ active: isActiveColors }">
+      <ul class="toggle__accardion-list" :class="{ active: isActiveCategory }">
         <li class="toggle__accardion-subitem"></li>
         <li class="toggle__accardion-subitem" v-for="list in categoryTops" :key="list.id">
           <input
@@ -77,7 +89,7 @@ console.log(categoryTops.value.title)
         </li>
       </ul>
     </div>
-    <!-- <div class="toogle__colors">
+    <div class="toggle__colors">
       <div
         class="toggle__accardion-title"
         @click="toggleColors"
@@ -94,21 +106,47 @@ console.log(categoryTops.value.title)
           <path d="M1 10L6 5.5L1 1" stroke="black" stroke-linecap="round" stroke-linejoin="round" />
         </svg>
       </div>
-      <ul class="toggle__accardion-list" :class="{ active: isActiveColors }">
+      <ul class="toggle__accardion-list list-color" :class="{ active: isActiveColors }">
+        <li class="toggle__accardion-subitem" v-for="color in categoryColors" :key="color.id">
+          <div class="toggle__accardion-block">
+            <div
+              class="category-color-item"
+              :style="{ backgroundColor: color.color }"
+              @click="color.checked = !color.checked"
+            ></div>
+            {{ color.title }}
+          </div>
+        </li>
+      </ul>
+    </div>
+    <div class="toggle__price">
+      <div class="toggle__accardion-title" @click="togglePrice" :class="{ active: isActivePrice }">
+        <p>Prices</p>
+        <svg
+          width="7"
+          height="11"
+          viewBox="0 0 7 11"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path d="M1 10L6 5.5L1 1" stroke="black" stroke-linecap="round" stroke-linejoin="round" />
+        </svg>
+      </div>
+      <ul class="toggle__accardion-list" :class="{ active: isActivePrice }">
         <li class="toggle__accardion-subitem"></li>
-        <li class="toggle__accardion-subitem" v-for="list in categoryColors" :key="list.id">
+        <li class="toggle__accardion-subitem" v-for="price in categoryPrice" :key="price.id">
           <input
             type="checkbox"
-            :id="'checkbox-' + list.id"
+            :id="'priceCheck-' + price.id"
             class="toggle__accardion-input"
-            v-model="list.checked"
+            v-model="price.checked"
           />
-          <label :for="'checkbox-' + list.id" class="toggle__accardion-label">
-            {{ list.color }}
+          <label :for="'priceCheck-' + price.id" class="toggle__accardion-label">
+            {{ price.title }} $
           </label>
         </li>
       </ul>
-    </div> -->
+    </div>
   </aside>
 </template>
 <style scoped>
@@ -167,11 +205,6 @@ console.log(categoryTops.value.title)
   margin: 10px 0;
 }
 
-.toggle__accardion-item {
-  display: flex;
-  height: 0px;
-}
-
 .toggle__accardion-list {
   display: flex;
   flex-direction: column;
@@ -180,6 +213,11 @@ console.log(categoryTops.value.title)
   opacity: 0;
   transition: all 0.3s ease-in-out;
   overflow: hidden;
+}
+
+.color--item {
+  flex-wrap: wrap;
+  color: #ff0000;
 }
 
 .toggle__accardion-list.active {
@@ -198,9 +236,42 @@ console.log(categoryTops.value.title)
   margin: 5px 0;
 }
 
+.list-color {
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 40px;
+}
+
+.list-color .toggle__accardion-subitem {
+  width: 20;
+}
+
 .toggle__accardion-subitem input {
   width: 20px;
   height: 20px;
   border-radius: 0;
+}
+
+.list-color .toggle__accardion-subitem {
+  justify-content: center;
+}
+
+.toggle__accardion-input {
+  cursor: pointer;
+}
+
+.category-color-item {
+  width: 20px;
+  height: 20px;
+  border: 1px solid #000;
+  border-radius: 50%;
+}
+
+.toggle__accardion-block {
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-size: 12px;
 }
 </style>
