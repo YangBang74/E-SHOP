@@ -1,0 +1,6 @@
+@import './base.css';
+
+body {
+  font-family: 'Beatrice Deck Trial', sans-serif;
+  background: url('/public/grain-bg.png') repeat center center fixed;
+}
