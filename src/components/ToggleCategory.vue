@@ -1,12 +1,16 @@
 <script setup>
-// import { c } from 'vite/dist/node/moduleRunnerTransport.d-DJ_mE5sf'
 import { ref } from 'vue'
 
+const menu = ref(false)
 const isActiveSize = ref(false)
 const isActiveCategory = ref(false)
 const isActiveColors = ref(false)
 const isActivePrice = ref(false)
 const isActiveCollections = ref(false)
+
+const openAside = () => {
+  menu.value = !menu.value
+}
 
 const toggleSize = () => {
   isActiveSize.value = !isActiveSize.value
@@ -60,11 +64,18 @@ const categoryPrice = ref([
   { id: 5, title: '1000-2000', checked: false },
   { id: 6, title: '2000+', checked: false },
 ])
+
+const categoryCollections = ref([
+  { id: 1, title: 'Summer Collection', checked: false },
+  { id: 2, title: 'Winter Collection', checked: false },
+  { id: 3, title: 'Spring Collection', checked: false },
+  { id: 4, title: 'Autumn Collection', checked: false },
+])
 </script>
 
 <template>
-  <aside class="toggle__menu">
-    <h3 class="toggle__menu-title">Filter</h3>
+  <aside class="toggle__menu" :class="{ active: menu }">
+    <h3 class="toggle__menu-title">Filters</h3>
     <div class="toggle__size border-bottom">
       <div class="toggle__accardion-title" @click="toggleSize" :class="{ active: isActiveSize }">
         <p>Sizes</p>
@@ -177,9 +188,9 @@ const categoryPrice = ref([
       <div
         class="toggle__accardion-title"
         @click="toggleCollections"
-        :class="{ active: isActivePrice }"
+        :class="{ active: isActiveCollections }"
       >
-        <p>Prices</p>
+        <p>Collections</p>
         <svg
           width="7"
           height="11"
@@ -190,37 +201,80 @@ const categoryPrice = ref([
           <path d="M1 10L6 5.5L1 1" stroke="black" stroke-linecap="round" stroke-linejoin="round" />
         </svg>
       </div>
-      <ul class="toggle__accardion-list" :class="{ active: isActivePrice }">
-        <li class="toggle__accardion-subitem" v-for="price in categoryPrice" :key="price.id">
+      <ul class="toggle__accardion-list" :class="{ active: isActiveCollections }">
+        <li
+          class="toggle__accardion-subitem"
+          v-for="colect in categoryCollections"
+          :key="colect.id"
+        >
           <input
             type="checkbox"
-            :id="'priceCheck-' + price.id"
+            :id="'colectionCheck-' + colect.id"
             class="toggle__accardion-input"
-            v-model="price.checked"
+            v-model="colect.checked"
           />
-          <label :for="'priceCheck-' + price.id" class="toggle__accardion-label">
-            {{ price.title }} $
+          <label :for="'colectionCheck-' + colect.id" class="toggle__accardion-label">
+            {{ colect.title }}
           </label>
         </li>
       </ul>
     </div>
   </aside>
+  <button class="header__toggle" @click="openAside">
+    <span class="header__toggle-line"></span>
+    <span class="header__toggle-line"></span>
+    <span class="header__toggle-line"></span>
+  </button>
 </template>
 <style scoped>
+.header__toggle {
+  display: block;
+  width: 30px;
+  height: 30px;
+  z-index: 100;
+  cursor: pointer;
+}
+
+.header__toggle-line {
+  display: block;
+  width: 100%;
+  height: 1px;
+  background-color: #000000;
+  margin: 7px 0;
+}
+
+.header__toggle-line:nth-child(1) {
+  margin: 4px 0 7px 0;
+}
+
 .toggle__menu {
+  overflow: auto;
+  top: 3.75rem;
+  position: absolute;
+  left: -1000%;
   background-color: #ffffff;
-  width: 50%;
+  width: 30%;
+  height: 100vh;
   z-index: 50;
   display: flex;
   flex-direction: column;
   gap: 1.25rem;
-  transition: 0.2s;
+  transition: 0.5s ease;
   padding: 1.875rem;
+}
+
+.toggle__menu::-webkit-scrollbar {
+  display: none;
+}
+
+.toggle__menu.active {
+  left: 0;
 }
 
 .toggle__menu-title {
   font-weight: 600;
-  margin-bottom: 10px;
+  padding: 10px 0;
+  font-size: 1.125rem;
 }
 
 .toggle__size p {
@@ -229,7 +283,6 @@ const categoryPrice = ref([
 
 .border-bottom {
   border-bottom: 0.0625rem dashed #c9c9c9;
-  padding: 0.625rem 0;
 }
 
 .toggle__size-blocks {
@@ -242,6 +295,7 @@ const categoryPrice = ref([
   height: 0;
   opacity: 0;
   transition: 0.2s;
+  padding-bottom: 0.625rem;
 }
 
 .toggle__size-blocks.active {
@@ -272,6 +326,10 @@ const categoryPrice = ref([
   justify-content: space-between;
 }
 
+.toggle__accardion-title p {
+  margin: 0.625rem 0;
+}
+
 .toggle__accardion-title svg {
   transition: 0.2s;
 }
@@ -288,6 +346,7 @@ const categoryPrice = ref([
   opacity: 0;
   transition: all 0.3s ease-in-out;
   overflow: hidden;
+  padding-bottom: 0.625rem;
 }
 
 .color--item {

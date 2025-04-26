@@ -2,5 +2,9 @@
 
 body {
   font-family: 'Beatrice Deck Trial', sans-serif;
-  background: url('/public/grain-bg.png') repeat center center fixed;
+  background: url('/grain-bg.png') repeat center center fixed;
+}
+
+.container {
+  padding: 0 1.875rem;
 }
