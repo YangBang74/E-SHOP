@@ -1,9 +1,16 @@
 <script setup>
+// import { c } from 'vite/dist/node/moduleRunnerTransport.d-DJ_mE5sf'
 import { ref } from 'vue'
 
+const isActiveSize = ref(false)
 const isActiveCategory = ref(false)
 const isActiveColors = ref(false)
 const isActivePrice = ref(false)
+const isActiveCollections = ref(false)
+
+const toggleSize = () => {
+  isActiveSize.value = !isActiveSize.value
+}
 
 const toggleCategory = () => {
   isActiveCategory.value = !isActiveCategory.value
@@ -15,6 +22,18 @@ const toggleColors = () => {
 const togglePrice = () => {
   isActivePrice.value = !isActivePrice.value
 }
+
+const toggleCollections = () => {
+  isActiveCollections.value = !isActiveCollections.value
+}
+
+const categorySizes = ref([
+  { id: 1, title: 'XS', checked: false },
+  { id: 2, title: 'S', checked: false },
+  { id: 3, title: 'M', checked: false },
+  { id: 4, title: 'L', checked: false },
+  { id: 5, title: 'XL', checked: false },
+])
 
 const categoryTops = ref([
   { id: 1, title: 'T-Shirt', checked: false },
@@ -46,18 +65,26 @@ const categoryPrice = ref([
 <template>
   <aside class="toggle__menu">
     <h3 class="toggle__menu-title">Filter</h3>
-    <div class="toggle__size">
-      <p>Size</p>
-      <div class="toggle__size-blocks">
-        <button type="button" class="toggle__block-size">XS</button>
-        <button type="button" class="toggle__block-size">S</button>
-        <button type="button" class="toggle__block-size">M</button>
-        <button type="button" class="toggle__block-size">L</button>
-        <button type="button" class="toggle__block-size">XL</button>
-        <button type="button" class="toggle__block-size">2X</button>
+    <div class="toggle__size border-bottom">
+      <div class="toggle__accardion-title" @click="toggleSize" :class="{ active: isActiveSize }">
+        <p>Sizes</p>
+        <svg
+          width="7"
+          height="11"
+          viewBox="0 0 7 11"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path d="M1 10L6 5.5L1 1" stroke="black" stroke-linecap="round" stroke-linejoin="round" />
+        </svg>
+      </div>
+      <div class="toggle__size-blocks" :class="{ active: isActiveSize }">
+        <div v-for="size in categorySizes" class="toggle__size-wrap">
+          <button class="toggle__block-size" :key="size.id">{{ size.title }}</button>
+        </div>
       </div>
     </div>
-    <div class="toggle__category">
+    <div class="toggle__category border-bottom">
       <div
         class="toggle__accardion-title"
         @click="toggleCategory"
@@ -89,7 +116,7 @@ const categoryPrice = ref([
         </li>
       </ul>
     </div>
-    <div class="toggle__colors">
+    <div class="toggle__colors border-bottom">
       <div
         class="toggle__accardion-title"
         @click="toggleColors"
@@ -119,7 +146,7 @@ const categoryPrice = ref([
         </li>
       </ul>
     </div>
-    <div class="toggle__price">
+    <div class="toggle__price border-bottom">
       <div class="toggle__accardion-title" @click="togglePrice" :class="{ active: isActivePrice }">
         <p>Prices</p>
         <svg
@@ -133,7 +160,37 @@ const categoryPrice = ref([
         </svg>
       </div>
       <ul class="toggle__accardion-list" :class="{ active: isActivePrice }">
-        <li class="toggle__accardion-subitem"></li>
+        <li class="toggle__accardion-subitem" v-for="price in categoryPrice" :key="price.id">
+          <input
+            type="checkbox"
+            :id="'priceCheck-' + price.id"
+            class="toggle__accardion-input"
+            v-model="price.checked"
+          />
+          <label :for="'priceCheck-' + price.id" class="toggle__accardion-label">
+            {{ price.title }} $
+          </label>
+        </li>
+      </ul>
+    </div>
+    <div class="toggle__collection border-bottom">
+      <div
+        class="toggle__accardion-title"
+        @click="toggleCollections"
+        :class="{ active: isActivePrice }"
+      >
+        <p>Prices</p>
+        <svg
+          width="7"
+          height="11"
+          viewBox="0 0 7 11"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path d="M1 10L6 5.5L1 1" stroke="black" stroke-linecap="round" stroke-linejoin="round" />
+        </svg>
+      </div>
+      <ul class="toggle__accardion-list" :class="{ active: isActivePrice }">
         <li class="toggle__accardion-subitem" v-for="price in categoryPrice" :key="price.id">
           <input
             type="checkbox"
@@ -156,39 +213,57 @@ const categoryPrice = ref([
   z-index: 50;
   display: flex;
   flex-direction: column;
-  padding: 30px;
-  gap: 20px;
+  gap: 1.25rem;
   transition: 0.2s;
+  padding: 1.875rem;
 }
 
 .toggle__menu-title {
   font-weight: 600;
+  margin-bottom: 10px;
 }
 
 .toggle__size p {
   font-weight: 500;
 }
 
-.toggle__size {
-  border-bottom: 1px dashed #c9c9c9;
+.border-bottom {
+  border-bottom: 0.0625rem dashed #c9c9c9;
+  padding: 0.625rem 0;
 }
 
 .toggle__size-blocks {
-  margin: 10px 0 20px;
-  display: flex;
+  margin: 0.625rem 0;
+  display: none;
+  flex-direction: row;
   justify-content: start;
   align-items: center;
-  gap: 10px;
+  gap: 0.625rem;
+  height: 0;
+  opacity: 0;
+  transition: 0.2s;
+}
+
+.toggle__size-blocks.active {
+  display: flex;
+  height: auto;
+  opacity: 1;
+}
+
+.toggle__size-wrap {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .toggle__block-size {
   font-weight: 500;
   justify-content: center;
   align-self: center;
-  height: 40px;
-  width: 38px;
-  border: 1px solid #a3a3a3;
-  padding-top: 2px;
+  height: 2.5rem;
+  width: 2.375rem;
+  border: 0.0625rem solid #a3a3a3;
+  padding-top: 0.125rem;
 }
 
 .toggle__accardion-title {
@@ -202,7 +277,7 @@ const categoryPrice = ref([
 }
 
 .toggle__accardion-content {
-  margin: 10px 0;
+  margin: 0.625rem 0;
 }
 
 .toggle__accardion-list {
@@ -232,14 +307,14 @@ const categoryPrice = ref([
 .toggle__accardion-subitem {
   display: flex;
   align-items: center;
-  gap: 10px;
-  margin: 5px 0;
+  gap: 0.625rem;
+  margin: 0.3125rem 0;
 }
 
 .list-color {
   flex-direction: row;
   flex-wrap: wrap;
-  gap: 40px;
+  gap: 2.5rem;
 }
 
 .list-color .toggle__accardion-subitem {
@@ -247,8 +322,8 @@ const categoryPrice = ref([
 }
 
 .toggle__accardion-subitem input {
-  width: 20px;
-  height: 20px;
+  width: 1.25rem;
+  height: 1.25rem;
   border-radius: 0;
 }
 
@@ -261,9 +336,9 @@ const categoryPrice = ref([
 }
 
 .category-color-item {
-  width: 20px;
-  height: 20px;
-  border: 1px solid #000;
+  width: 1.25rem;
+  height: 1.25rem;
+  border: 0.0625rem solid #000;
   border-radius: 50%;
 }
 
@@ -272,6 +347,6 @@ const categoryPrice = ref([
   display: flex;
   flex-direction: column;
   align-items: center;
-  font-size: 12px;
+  font-size: 0.75rem;
 }
 </style>
