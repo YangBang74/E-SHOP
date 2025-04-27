@@ -13,7 +13,7 @@ const getShirts = async () => {
   showLoader.value = true
   try {
     const response = await axios.get(
-      `https://e-shop-8d4b7-default-rtdb.asia-southeast1.firebasedatabase.app/shirt.json?auth=${authStore.userInfo.token}`,
+      `https://e-shop-8d4b7-default-rtdb.asia-southeast1.firebasedatabase.app/shirt.json?`,
     )
     console.log(response.data)
     shirts.value = response.data
