@@ -9,20 +9,20 @@ const router = useRouter()
 const email = ref()
 const password = ref()
 
-const signup = async () => {
+const signin = async () => {
   await authStore.auth(
     {
       email: email.value,
       password: password.value,
     },
-    'signup',
+    'signin',
   )
   router.push('/')
 }
 </script>
 <template>
-  <div class="signup">
-    <h1>Sign Up</h1>
+  <div class="signin">
+    <h1>Sign In</h1>
     <form>
       <p class="error" v-if="authStore.error">{{ authStore.error }}</p>
       <div>
@@ -40,13 +40,13 @@ const signup = async () => {
           @keypress="
             (event) => {
               if (event.key === 'Enter') {
-                signup()
+                signin()
               }
             }
           "
         />
       </div>
-      <button type="button" @click="signup">
+      <button type="button" @click="signin">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 200 200"
@@ -103,14 +103,14 @@ const signup = async () => {
             r="70"
           ></circle>
         </svg>
-        <p v-else>Sign up</p>
+        <p v-else>Sign in</p>
       </button>
     </form>
-    <div>Are you already registered? <a href="/signin">Sign in</a></div>
+    <div>Don't have account? <a href="/signup">Sign up</a></div>
   </div>
 </template>
 <style scoped>
-.signup {
+.signin {
   max-width: 700px;
   margin: auto;
   padding: 20px 40px;
@@ -122,19 +122,19 @@ const signup = async () => {
   font-size: 14px;
 }
 
-.signup h1 {
+.signin h1 {
   font-weight: 600;
   font-size: 22px;
 }
 
-.signup form {
+.signin form {
   margin: 20px 0;
   display: flex;
   flex-direction: column;
   row-gap: 20px;
 }
 
-.signup form div {
+.signin form div {
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -142,13 +142,13 @@ const signup = async () => {
   column-gap: 20px;
 }
 
-.signup form div label {
+.signin form div label {
   font-weight: 500;
   font-size: 14px;
   flex: 0 1 100px;
 }
 
-.signup form input {
+.signin form input {
   background-color: #ffffff;
   border: 1px solid #000000;
   border-radius: 4px;
@@ -157,7 +157,7 @@ const signup = async () => {
   font-size: 14px;
 }
 
-.signup form button {
+.signin form button {
   position: relative;
   background-color: #007bff;
   color: white;
@@ -169,7 +169,7 @@ const signup = async () => {
   height: 40px;
 }
 
-.signup form button svg {
+.signin form button svg {
   position: absolute;
   top: 50%;
   transform: translate(0, -50%);

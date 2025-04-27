@@ -2,7 +2,7 @@ import { ref } from 'vue'
 import { defineStore } from 'pinia'
 import axios from 'axios'
 
-const apiKey = 'AIzaSyB1yTSKtcqud0m1rlZzq9ZGbBZVoveMYgI'
+const apiKey = import.meta.env.VITE_FIREBASE_API_KEY
 
 export const useAuthStore = defineStore('auth', () => {
   const userInfo = ref({
@@ -15,12 +15,13 @@ export const useAuthStore = defineStore('auth', () => {
 
   const error = ref('')
   const loader = ref(false)
-  const signUp = async (payload) => {
+  const auth = async (payload, type) => {
+    const stringUrl = type === 'signup' ? 'signUp' : 'signInWithPassword'
     error.value = ''
     loader.value = true
     try {
       let response = await axios.post(
-        'https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyB1yTSKtcqud0m1rlZzq9ZGbBZVoveMYgI',
+        `https://identitytoolkit.googleapis.com/v1/accounts:${stringUrl}?key=${apiKey}`,
         {
           ...payload,
           returnSecureToken: true,
@@ -34,7 +35,6 @@ export const useAuthStore = defineStore('auth', () => {
         expiresIn: response.data.expiresIn,
       }
       console.log(response.data)
-      loader.value = false
     } catch (err) {
       switch (err.response.data.error.message) {
         case 'EMAIL_EXISTS':
@@ -43,22 +43,27 @@ export const useAuthStore = defineStore('auth', () => {
         case 'OPERATION_NOT_ALLOWED':
           error.value = 'Password sign-in is disabled for this project.'
           break
-        case 'TOO_MANY_ATTEMPTS_TRY_LATER':
-          error.value = 'Too many attempts. Try again later.'
-          break
         case 'INVALID_EMAIL':
           error.value = 'Invalid email address.'
           break
         case 'WEAK_PASSWORD : Password should be at least 6 characters':
           error.value = 'Password should be at least 6 characters.'
           break
+        case 'EMAIL_NOT_FOUND':
+          error.value = 'Email not found.'
+          break
+        case 'INVALID_PASSWORD':
+          error.value = 'Invalid password.'
+          break
         default:
           error.value = 'An unknown error occurred.'
           break
       }
+      throw error.value
+    } finally {
       loader.value = false
     }
   }
 
-  return { signUp, userInfo, error, loader }
+  return { auth, userInfo, error, loader }
 })
