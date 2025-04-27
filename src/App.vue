@@ -4,9 +4,11 @@ import Header from './components/Header.vue'
 </script>
 
 <template>
-  <Header />
+  <!-- <Header /> -->
   <main>
-    <RouterView />
+    <div class="container">
+      <RouterView />
+    </div>
   </main>
 </template>
 

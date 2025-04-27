@@ -1,8 +1,12 @@
 @import './base.css';
 
 body {
-  font-family: 'Beatrice Deck Trial', sans-serif;
+  font-family: 'Cascadia Code', sans-serif;
   background: url('/grain-bg.png') repeat center center fixed;
+}
+
+.header__logo {
+  font-family: 'Beatrice Deck Trial', sans-serif;
 }
 
 .container {
